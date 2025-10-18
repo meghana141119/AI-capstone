@@ -1,0 +1,22 @@
+student_id,name,branch,section,parent_email
+1001,John Smith,CSE,A,john.smith.parent@email.com
+1002,Sarah Johnson,CSE,A,sarah.johnson.parent@email.com
+1003,Michael Brown,CSE,B,michael.brown.parent@email.com
+1004,Emily Davis,CSE,B,emily.davis.parent@email.com
+1005,David Wilson,CSE,C,david.wilson.parent@email.com
+2001,Lisa Anderson,ECE,A,lisa.anderson.parent@email.com
+2002,Robert Taylor,ECE,A,robert.taylor.parent@email.com
+2003,Jennifer White,ECE,B,jennifer.white.parent@email.com
+2004,Christopher Lee,ECE,B,christopher.lee.parent@email.com
+2005,Amanda Garcia,ECE,C,amanda.garcia.parent@email.com
+3001,Daniel Martinez,MECH,A,daniel.martinez.parent@email.com
+3002,Michelle Rodriguez,MECH,A,michelle.rodriguez.parent@email.com
+3003,Kevin Thompson,MECH,B,kevin.thompson.parent@email.com
+3004,Rachel Moore,MECH,B,rachel.moore.parent@email.com
+3005,Steven Jackson,MECH,C,steven.jackson.parent@email.com
+4001,Ashley Clark,CIVIL,A,ashley.clark.parent@email.com
+4002,Matthew Lewis,CIVIL,A,matthew.lewis.parent@email.com
+4003,Stephanie Walker,CIVIL,B,stephanie.walker.parent@email.com
+4004,Andrew Hall,CIVIL,B,andrew.hall.parent@email.com
+4005,Nicole Young,CIVIL,C,nicole.young.parent@email.com
+
