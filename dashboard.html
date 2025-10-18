@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Emergency Communication System{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Emergency Status Section -->
+    <section class="status-section">
+        <div class="status-card {% if emergency_status.active %}emergency-active{% else %}emergency-inactive{% endif %}">
+            <div class="status-header">
+                <i class="fas fa-shield-alt"></i>
+                <h2>Emergency Status</h2>
+            </div>
+            <div class="status-content">
+                {% if emergency_status.active %}
+                    <div class="emergency-indicator active">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>EMERGENCY ACTIVE</span>
+                    </div>
+                    <div class="emergency-details">
+                        <p><strong>Emergency ID:</strong> {{ emergency_status.emergency_id }}</p>
+                        <p><strong>Type:</strong> {{ emergency_status.emergency_type.title() }}</p>
+                        <p><strong>Message:</strong> {{ emergency_status.emergency_message }}</p>
+                        <p><strong>Time:</strong> {{ emergency_status.timestamp }}</p>
+                    </div>
+                    <button onclick="resolveEmergency()" class="btn btn-danger">
+                        <i class="fas fa-check-circle"></i> Resolve Emergency
+                    </button>
+                {% else %}
+                    <div class="emergency-indicator inactive">
+                        <i class="fas fa-check-circle"></i>
+                        <span>ALL CLEAR</span>
+                    </div>
+                    <p>No active emergencies at this time.</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Trigger Form -->
+    <section class="trigger-section">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-bullhorn"></i>
+                <h2>Trigger Emergency Alert</h2>
+            </div>
+            <div class="card-content">
+                <form id="emergencyForm" onsubmit="triggerEmergency(event)">
+                    <div class="form-group">
+                        <label for="emergencyType">Emergency Type:</label>
+                        <select id="emergencyType" name="emergency_type" onchange="toggleFilters()" required>
+                            <option value="">Select Emergency Type</option>
+                            <option value="all">All Students</option>
+                            <option value="branch">Specific Branch</option>
+                            <option value="section">Specific Section</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="branchGroup" style="display: none;">
+                        <label for="branch">Branch:</label>
+                        <select id="branch" name="branch" onchange="loadSections()">
+                            <option value="">Select Branch</option>
+                            {% for branch in available_branches %}
+                                <option value="{{ branch }}">{{ branch }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="sectionGroup" style="display: none;">
+                        <label for="section">Section:</label>
+                        <select id="section" name="section" onchange="loadStudents()">
+                            <option value="">Select Section</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="studentSelectionGroup" style="display: none;">
+                        <label>Student Selection (Check = Safe, Uncheck = In Danger):</label>
+                        <div id="studentChecklist" class="student-checklist">
+                            <p>Select a branch and section to see students...</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emergencyMessage">Emergency Message:</label>
+                        <textarea id="emergencyMessage" name="emergency_message" 
+                                  placeholder="Describe the emergency situation..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Send Emergency Alert
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-bolt"></i>
+                <h2>Quick Actions</h2>
+            </div>
+            <div class="card-content">
+                <div class="action-buttons">
+                    <button onclick="quickEmergency('fire')" class="btn btn-warning">
+                        <i class="fas fa-fire"></i> Fire Emergency
+                    </button>
+                    <button onclick="quickEmergency('medical')" class="btn btn-danger">
+                        <i class="fas fa-ambulance"></i> Medical Emergency
+                    </button>
+                    <button onclick="quickEmergency('weather')" class="btn btn-info">
+                        <i class="fas fa-cloud-rain"></i> Weather Alert
+                    </button>
+                    <button onclick="quickEmergency('security')" class="btn btn-secondary">
+                        <i class="fas fa-shield-alt"></i> Security Alert
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="activity-section">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-history"></i>
+                <h2>Recent Activity</h2>
+            </div>
+            <div class="card-content">
+                <div id="recentActivity">
+                    <p>Loading recent activity...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <p>Processing Emergency Alert...</p>
+    </div>
+</div>
+
+<!-- Success/Error Messages -->
+<div id="messageContainer" class="message-container"></div>
+{% endblock %}
+

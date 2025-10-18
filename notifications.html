@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications - Emergency Communication System{% endblock %}
+
+{% block content %}
+<div class="notifications-page">
+    <!-- Emergency History -->
+    <section class="emergency-history">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-history"></i>
+                <h2>Emergency History</h2>
+            </div>
+            <div class="card-content">
+                {% if emergency_history %}
+                    <div class="history-list">
+                        {% for record in emergency_history %}
+                            <div class="history-item">
+                                <div class="history-header">
+                                    <h3>{{ record.alert_data.emergency_id }}</h3>
+                                    <span class="timestamp">{{ record.alert_data.timestamp }}</span>
+                                </div>
+                                <div class="history-details">
+                                    <p><strong>Type:</strong> {{ record.alert_data.emergency_type.title() }}</p>
+                                    <p><strong>Message:</strong> {{ record.alert_data.emergency_message }}</p>
+                                    <p><strong>Students Affected:</strong> {{ record.alert_data.affected_count }}</p>
+                                    <p><strong>Notifications Sent:</strong> {{ record.notification_result.notifications_sent }}</p>
+                                </div>
+                                <div class="history-actions">
+                                    <button onclick="viewEmergencyDetails('{{ record.alert_data.emergency_id }}')" 
+                                            class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No emergency history available.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Notifications -->
+    <section class="recent-notifications">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-bell"></i>
+                <h2>Recent Notifications</h2>
+            </div>
+            <div class="card-content">
+                {% if notifications %}
+                    <div class="notifications-list">
+                        {% for notification in notifications %}
+                            <div class="notification-item">
+                                <div class="notification-header">
+                                    <i class="fas fa-envelope"></i>
+                                    <h4>{{ notification.subject }}</h4>
+                                    <span class="timestamp">{{ notification.timestamp }}</span>
+                                </div>
+                                <div class="notification-details">
+                                    <p><strong>To:</strong> {{ notification.parent_email }}</p>
+                                    <p><strong>Student ID:</strong> {{ notification.student_id }}</p>
+                                    <p><strong>Status:</strong> 
+                                        <span class="status-badge {{ notification.status }}">{{ notification.status.title() }}</span>
+                                    </p>
+                                </div>
+                                <div class="notification-message">
+                                    <p>{{ notification.message[:200] }}{% if notification.message|length > 200 %}...{% endif %}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-bell-slash"></i>
+                        <p>No recent notifications.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="statistics">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-bar"></i>
+                <h2>Statistics</h2>
+            </div>
+            <div class="card-content">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>{{ emergency_history|length }}</h3>
+                            <p>Total Emergencies</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>{{ notifications|length }}</h3>
+                            <p>Notifications Sent</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>20</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>4</h3>
+                            <p>Branches</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Emergency Details Modal -->
+<div id="emergencyModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Emergency Details</h2>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Emergency details will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
